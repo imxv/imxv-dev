@@ -1,17 +1,93 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NowCard from '../components/NowCard.astro';
+import PostItem from '../components/PostItem.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { SITE } from '../data/site';
+import { nowSections } from '../data/now';
+import { projects } from '../data/projects';
+import { getCollection } from 'astro:content';
 
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const recentPosts = allPosts
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5);
+
+const activeNowItems = nowSections
+  .flatMap((s) => s.items)
+  .filter((i) => i.status === 'active');
+
+const featuredProjects = projects.filter((p) => p.featured);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title={SITE.title} description={SITE.description}>
+  <!-- Now -->
+  <section class="mb-12">
+    <div class="mb-3 flex items-center justify-between">
+      <h2 class="font-[family-name:var(--font-mono)] text-xs font-medium uppercase tracking-wider text-text-tertiary">
+        Now
+      </h2>
+      <a href="/now" class="text-xs text-text-tertiary hover:text-accent transition-colors">
+        查看全部 &rarr;
+      </a>
+    </div>
+    <NowCard items={activeNowItems} limit={3} />
+  </section>
+
+  <!-- Recent Posts -->
+  <section class="mb-12">
+    <div class="mb-3 flex items-center justify-between">
+      <h2 class="font-[family-name:var(--font-mono)] text-xs font-medium uppercase tracking-wider text-text-tertiary">
+        最新文章
+      </h2>
+      <a href="/posts" class="text-xs text-text-tertiary hover:text-accent transition-colors">
+        查看全部 &rarr;
+      </a>
+    </div>
+    <div class="divide-y divide-border-light">
+      {recentPosts.map((post) => (
+        <PostItem
+          slug={post.id}
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          type={post.data.type}
+          tags={post.data.tags}
+          weekNumber={post.data.weekNumber}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- Featured Projects -->
+  <section class="mb-12">
+    <div class="mb-3 flex items-center justify-between">
+      <h2 class="font-[family-name:var(--font-mono)] text-xs font-medium uppercase tracking-wider text-text-tertiary">
+        项目
+      </h2>
+      <a href="/projects" class="text-xs text-text-tertiary hover:text-accent transition-colors">
+        查看全部 &rarr;
+      </a>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {featuredProjects.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+
+  <!-- Bio -->
+  <section class="border-t border-border pt-8">
+    <p class="mb-2 font-[family-name:var(--font-heading)] text-lg italic text-text-secondary">
+      在公开中构建，在构建中思考。
+    </p>
+    <p class="text-sm text-text-secondary leading-relaxed">
+      移动端开发者，关注跨平台方案和 AI Agent 工具链。用 Build in Public 的方式记录构建过程中的发现与思考。
+    </p>
+    <div class="mt-4 flex gap-4">
+      {SITE.social.github && (
+        <a href={SITE.social.github} target="_blank" rel="noopener noreferrer" class="text-sm text-text-tertiary hover:text-accent transition-colors">
+          GitHub
+        </a>
+      )}
+    </div>
+  </section>
+</BaseLayout>

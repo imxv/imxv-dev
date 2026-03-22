@@ -1,0 +1,44 @@
+---
+import type { Project } from '../data/projects';
+import TagBadge from './TagBadge.astro';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+
+const statusLabel: Record<Project['status'], string> = {
+  active: '进行中',
+  completed: '已完成',
+  paused: '暂停',
+};
+
+const statusDot: Record<Project['status'], string> = {
+  active: 'bg-tag-green',
+  completed: 'bg-tag-blue',
+  paused: 'bg-text-tertiary',
+};
+---
+
+<div class="rounded-lg border border-border p-4 transition-colors hover:border-accent-soft">
+  <div class="mb-2 flex items-center justify-between">
+    <h3 class="font-[family-name:var(--font-mono)] text-sm font-medium text-text-primary">
+      {project.github ? (
+        <a href={project.github} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">
+          {project.name}
+        </a>
+      ) : (
+        project.name
+      )}
+    </h3>
+    <span class="flex items-center gap-1.5 text-xs text-text-tertiary">
+      <span class:list={['inline-block h-1.5 w-1.5 rounded-full', statusDot[project.status]]} />
+      {statusLabel[project.status]}
+    </span>
+  </div>
+  <p class="mb-3 text-sm text-text-secondary">{project.description}</p>
+  <div class="flex flex-wrap gap-1.5">
+    {project.tags.map((tag) => <TagBadge tag={tag} />)}
+  </div>
+</div>

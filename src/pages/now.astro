@@ -1,0 +1,41 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { nowSections, NOW_UPDATED } from '../data/now';
+
+const statusIcon: Record<string, string> = {
+  active: '🟢',
+  paused: '💤',
+  done: '✅',
+};
+---
+
+<PageLayout title="Now" description="我当前在做什么、关注什么。">
+  <div class="space-y-8">
+    {nowSections.map((section) => (
+      <section>
+        <h2 class="mb-4 font-[family-name:var(--font-mono)] text-sm font-medium text-text-secondary">
+          {section.title}
+        </h2>
+        <ul class="space-y-4">
+          {section.items.map((item) => (
+            <li class="flex items-start gap-2.5">
+              <span class="mt-0.5 shrink-0 text-sm">{statusIcon[item.status]}</span>
+              <div>
+                <p class="text-sm text-text-primary">{item.text}</p>
+                {item.detail && (
+                  <p class="mt-1 text-sm text-text-secondary leading-relaxed">
+                    {item.detail}
+                  </p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <p class="mt-12 text-xs text-text-tertiary">
+    最后更新：{NOW_UPDATED}
+  </p>
+</PageLayout>

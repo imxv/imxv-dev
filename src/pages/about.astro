@@ -1,0 +1,31 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { SITE } from '../data/site';
+---
+
+<PageLayout title="关于" description="关于 Imxv 和这个博客。">
+  <div class="prose prose-neutral">
+    <p>
+      移动端开发者，当前专注于跨平台方案和 AI Agent 工具链。在快手从事大前端开发工作。
+    </p>
+    <p>
+      这个博客是一个 Build in Public 的实验场。
+      我会在这里记录构建过程中的发现、踩过的坑、以及把不同工具串起来时产生的想法。
+      内容涵盖移动端原生开发、Claude Code 工作流、CLI 工具构建等方向。
+    </p>
+    <p>
+      如果你对类似的话题感兴趣，欢迎通过 RSS 订阅或在 GitHub 上交流。
+    </p>
+
+    <h2>技术栈关键词</h2>
+    <p>
+      Android / iOS / React Native / KMP / TypeScript / Claude Code / Agent SDK
+    </p>
+
+    <h2>联系</h2>
+    <ul>
+      {SITE.social.github && <li><a href={SITE.social.github}>GitHub</a></li>}
+      <li><a href="/rss.xml">RSS</a></li>
+    </ul>
+  </div>
+</PageLayout>

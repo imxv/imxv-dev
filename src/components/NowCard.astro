@@ -1,0 +1,22 @@
+---
+import type { NowItem } from '../data/now';
+
+interface Props {
+  items: NowItem[];
+  limit?: number;
+}
+
+const { items, limit } = Astro.props;
+const displayed = items
+  .filter((i) => i.status === 'active')
+  .slice(0, limit ?? items.length);
+---
+
+<div class="space-y-2">
+  {displayed.map((item) => (
+    <div class="flex items-start gap-2.5 text-sm">
+      <span class="mt-1.5 inline-block h-2 w-2 shrink-0 rounded-full bg-tag-green animate-pulse-dot" />
+      <span class="text-text-primary">{item.text}</span>
+    </div>
+  ))}
+</div>

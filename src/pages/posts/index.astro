@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostItem from '../../components/PostItem.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+// Collect all unique tags
+const allTags = [...new Set(sortedPosts.flatMap((p) => p.data.tags))].sort();
+
+// Type filters
+const typeFilters = [
+  { label: '全部', value: '' },
+  { label: '文章', value: 'article' },
+  { label: 'TIL', value: 'til' },
+  { label: '周记', value: 'weekly' },
+];
+---
+
+<BaseLayout title="文章" description="所有文章、TIL 和周记。">
+  <h1 class="mb-6 text-2xl font-medium">文章</h1>
+
+  <!-- Filters (static, use URL params for JS-free filtering) -->
+  <div class="mb-8 space-y-3">
+    <!-- Type filter -->
+    <div class="flex flex-wrap gap-2">
+      {typeFilters.map((f) => (
+        <a
+          href={f.value ? `/posts?type=${f.value}` : '/posts'}
+          class="rounded-full border border-border px-3 py-1 font-[family-name:var(--font-mono)] text-xs text-text-secondary hover:border-accent-soft hover:text-accent transition-colors"
+        >
+          {f.label}
+        </a>
+      ))}
+    </div>
+
+    <!-- Tag filter -->
+    <div class="flex flex-wrap gap-1.5">
+      {allTags.map((tag) => (
+        <a
+          href={`/posts?tag=${encodeURIComponent(tag)}`}
+          class="rounded-full border border-border-light bg-bg-subtle px-2.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-text-tertiary hover:border-accent-soft hover:text-accent transition-colors"
+        >
+          {tag}
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <!-- Post list -->
+  <div class="divide-y divide-border-light">
+    {sortedPosts.map((post) => (
+      <PostItem
+        slug={post.id}
+        title={post.data.title}
+        description={post.data.description}
+        date={post.data.date}
+        type={post.data.type}
+        tags={post.data.tags}
+        weekNumber={post.data.weekNumber}
+      />
+    ))}
+  </div>
+
+  {sortedPosts.length === 0 && (
+    <p class="py-12 text-center text-sm text-text-tertiary">还没有文章，即将发布。</p>
+  )}
+</BaseLayout>

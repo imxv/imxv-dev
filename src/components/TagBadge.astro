@@ -1,0 +1,20 @@
+---
+interface Props {
+  tag: string;
+  interactive?: boolean;
+}
+
+const { tag, interactive = false } = Astro.props;
+const Tag = interactive ? 'a' : 'span';
+const extra = interactive ? { href: `/posts?tag=${encodeURIComponent(tag)}` } : {};
+---
+
+<Tag
+  {...extra}
+  class:list={[
+    'inline-block rounded-full border border-border-light bg-bg-subtle px-2.5 py-0.5 font-[family-name:var(--font-mono)] text-xs text-text-secondary',
+    interactive && 'hover:border-accent-soft hover:text-accent transition-colors cursor-pointer',
+  ]}
+>
+  {tag}
+</Tag>

@@ -1,0 +1,19 @@
+---
+import { SITE } from '../data/site';
+---
+
+<footer class="mt-auto border-t border-border">
+  <div class="mx-auto flex max-w-3xl items-center justify-between px-6 py-6 text-xs text-text-tertiary">
+    <span>&copy; {new Date().getFullYear()} {SITE.author}</span>
+    <div class="flex items-center gap-4">
+      {SITE.social.github && (
+        <a href={SITE.social.github} target="_blank" rel="noopener noreferrer" class="hover:text-text-secondary transition-colors">
+          GitHub
+        </a>
+      )}
+      <a href="/rss.xml" class="hover:text-text-secondary transition-colors">
+        RSS
+      </a>
+    </div>
+  </div>
+</footer>

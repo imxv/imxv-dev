@@ -1,0 +1,15 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
+---
+
+<PageLayout title="项目" description="我正在构建和维护的项目。">
+  <div class="grid gap-4 sm:grid-cols-2">
+    {projects.map((p) => <ProjectCard project={p} />)}
+  </div>
+
+  {projects.length === 0 && (
+    <p class="py-12 text-center text-sm text-text-tertiary">项目列表即将更新。</p>
+  )}
+</PageLayout>

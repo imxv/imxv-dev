@@ -1,0 +1,106 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* Base — Rosé Pine Dawn */
+  --color-bg: #faf4ed;
+  --color-bg-subtle: #f2ede5;
+  --color-text-primary: #575279;
+  --color-text-secondary: #6e6a86;
+  --color-text-tertiary: #9893a5;
+
+  /* Accent — Rose */
+  --color-accent: #b4637a;
+  --color-accent-soft: #c26d85;
+  --color-accent-bg: #f5e6ea;
+
+  /* Border */
+  --color-border: #d0d8d8;
+  --color-border-light: #e0e6e6;
+
+  /* Code */
+  --color-code-bg: #575279;
+  --color-code-text: #e6ebf3;
+
+  /* Tags */
+  --color-tag-blue: #286983;
+  --color-tag-green: #618774;
+  --color-tag-purple: #907aa9;
+  --color-tag-orange: #ea9d34;
+
+  /* Fonts */
+  --font-heading: 'Newsreader', Georgia, serif;
+  --font-body: 'Source Sans 3', -apple-system, sans-serif;
+  --font-mono: 'DM Mono', 'Fira Code', monospace;
+}
+
+/* Base styles */
+html {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+}
+
+/* Code */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+:not(pre) > code {
+  background-color: var(--color-bg-subtle);
+  padding: 0.15em 0.35em;
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-border-light);
+}
+
+/* Prose overrides */
+.prose {
+  --tw-prose-body: var(--color-text-primary);
+  --tw-prose-headings: var(--color-text-primary);
+  --tw-prose-links: var(--color-accent);
+  --tw-prose-code: var(--color-text-primary);
+  --tw-prose-hr: var(--color-border);
+  --tw-prose-quotes: var(--color-text-secondary);
+  --tw-prose-quote-borders: var(--color-accent-soft);
+  max-width: 72ch;
+}
+
+.prose a {
+  text-decoration-color: var(--color-accent-soft);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s;
+}
+
+.prose a:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+/* Pulse animation for Now status */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-accent-bg);
+  color: var(--color-text-primary);
+}
