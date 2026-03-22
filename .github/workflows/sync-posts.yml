@@ -2,7 +2,7 @@ name: Sync posts from Obsidian S3
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # 每 15 分钟检查一次
+    - cron: '*/5 * * * *'  # 每 5 分钟检查一次
   workflow_dispatch:         # 支持手动触发
 
 jobs:
