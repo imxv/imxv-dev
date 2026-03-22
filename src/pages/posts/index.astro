@@ -26,7 +26,7 @@ const typeFilters = [
   <!-- Filters (static, use URL params for JS-free filtering) -->
   <div class="mb-8 space-y-3">
     <!-- Type filter -->
-    <div class="flex flex-wrap gap-2">
+    <div id="type-filters" class="flex flex-wrap gap-2">
       {typeFilters.map((f) => (
         <a
           href={f.value ? `/posts?type=${f.value}` : '/posts'}
@@ -38,7 +38,7 @@ const typeFilters = [
     </div>
 
     <!-- Tag filter -->
-    <div class="flex flex-wrap gap-1.5">
+    <div id="tag-filters" class="flex flex-wrap gap-1.5">
       {allTags.map((tag) => (
         <a
           href={`/posts?tag=${encodeURIComponent(tag)}`}
@@ -51,21 +51,76 @@ const typeFilters = [
   </div>
 
   <!-- Post list -->
-  <div class="divide-y divide-border-light">
+  <div id="post-list" class="divide-y divide-border-light">
     {sortedPosts.map((post) => (
-      <PostItem
-        slug={post.id}
-        title={post.data.title}
-        description={post.data.description}
-        date={post.data.date}
-        type={post.data.type}
-        tags={post.data.tags}
-        weekNumber={post.data.weekNumber}
-      />
+      <div data-type={post.data.type} data-tags={post.data.tags.join(',')}>
+        <PostItem
+          slug={post.id}
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          type={post.data.type}
+          tags={post.data.tags}
+          weekNumber={post.data.weekNumber}
+        />
+      </div>
     ))}
   </div>
 
-  {sortedPosts.length === 0 && (
-    <p class="py-12 text-center text-sm text-text-tertiary">还没有文章，即将发布。</p>
-  )}
+  <p id="empty-msg" class="hidden py-12 text-center text-sm text-text-tertiary">没有匹配的文章。</p>
+
+  <script>
+    function applyFilters() {
+      const params = new URLSearchParams(window.location.search);
+      const type = params.get('type') || '';
+      const tag = params.get('tag') || '';
+      const items = document.querySelectorAll<HTMLElement>('#post-list > div');
+      const typeLinks = document.querySelectorAll<HTMLAnchorElement>('#type-filters a');
+      const tagLinks = document.querySelectorAll<HTMLAnchorElement>('#tag-filters a');
+      let visible = 0;
+
+      items.forEach((el) => {
+        const elType = el.dataset.type || '';
+        const elTags = (el.dataset.tags || '').split(',');
+        const matchType = !type || elType === type;
+        const matchTag = !tag || elTags.includes(tag);
+        const show = matchType && matchTag;
+        el.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      document.getElementById('empty-msg')!.classList.toggle('hidden', visible > 0);
+
+      // Highlight active filters
+      typeLinks.forEach((a) => {
+        const href = a.getAttribute('href') || '';
+        const linkType = new URLSearchParams(href.split('?')[1] || '').get('type') || '';
+        const active = linkType === type;
+        a.classList.toggle('border-accent', active);
+        a.classList.toggle('text-accent', active);
+        a.classList.toggle('font-medium', active);
+      });
+
+      tagLinks.forEach((a) => {
+        const href = a.getAttribute('href') || '';
+        const linkTag = new URLSearchParams(href.split('?')[1] || '').get('tag') || '';
+        const active = linkTag === tag;
+        a.classList.toggle('border-accent-soft', active);
+        a.classList.toggle('text-accent', active);
+      });
+    }
+
+    // Handle clicks without full page reload
+    document.querySelectorAll<HTMLAnchorElement>('#type-filters a, #tag-filters a').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const href = a.getAttribute('href') || '/posts';
+        window.history.pushState({}, '', href);
+        applyFilters();
+      });
+    });
+
+    window.addEventListener('popstate', applyFilters);
+    applyFilters();
+  </script>
 </BaseLayout>
