@@ -14,7 +14,7 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 ---
 
 {filtered.length > 0 && (
-  <nav class="mb-8 rounded-lg border border-border-light bg-bg-subtle p-4">
+  <nav class="toc-nav">
     <p class="mb-2 font-[family-name:var(--font-mono)] text-xs font-medium text-text-tertiary uppercase tracking-wider">
       目录
     </p>
@@ -23,7 +23,7 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
         <li style={h.depth === 3 ? 'padding-left: 1rem;' : ''}>
           <a
             href={`#${h.slug}`}
-            class="text-text-secondary hover:text-accent transition-colors"
+            class="text-text-tertiary hover:text-accent transition-colors"
           >
             {h.text}
           </a>

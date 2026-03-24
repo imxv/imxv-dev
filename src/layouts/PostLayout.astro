@@ -1,7 +1,10 @@
 ---
-import BaseLayout from './BaseLayout.astro';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import TagBadge from '../components/TagBadge.astro';
 import TOC from '../components/TOC.astro';
+import '../styles/global.css';
 
 interface Props {
   title: string;
@@ -20,39 +23,60 @@ const { title, description, date, updated, type, tags, toc, headings, weekNumber
 
 const dateStr = date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 const updatedStr = updated?.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
-
-const wordCount = Astro.slots.has('default') ? 0 : 0; // reading time estimated below
+const showToc = toc && type === 'article' && headings.filter(h => h.depth >= 2 && h.depth <= 3).length > 0;
 ---
 
-<BaseLayout title={title} description={description} ogImage={ogImage}>
-  <article>
-    <!-- Back link -->
-    <a href="/posts" class="mb-6 inline-flex items-center gap-1 text-sm text-text-tertiary hover:text-accent transition-colors">
-      &larr; 所有文章
-    </a>
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <BaseHead title={title} description={description} ogImage={ogImage} />
+  </head>
+  <body class="bg-bg text-text-primary">
+    <Header />
 
-    <!-- Header -->
-    <header class="mb-8">
-      <div class="mb-3 flex items-center gap-3 font-[family-name:var(--font-mono)] text-xs text-text-tertiary">
-        <time datetime={date.toISOString()}>{dateStr}</time>
-        {updated && <span>（更新于 {updatedStr}）</span>}
-      </div>
-      <h1 class="mb-4 text-2xl font-medium leading-snug sm:text-3xl">
-        {weekNumber ? `W${weekNumber}: ` : ''}{title}
-      </h1>
-      {tags.length > 0 && (
-        <div class="flex flex-wrap gap-1.5">
-          {tags.map((tag) => <TagBadge tag={tag} interactive />)}
-        </div>
-      )}
-    </header>
+    <div class="relative mx-auto w-full max-w-3xl px-6 py-10">
+        <!-- Main content -->
+        <article>
+          <a href="/posts" class="mb-6 inline-flex items-center gap-1 text-sm text-text-tertiary hover:text-accent transition-colors">
+            &larr; 所有文章
+          </a>
 
-    <!-- TOC -->
-    {toc && type === 'article' && <TOC headings={headings} />}
+          <header class="mb-8">
+            <div class="mb-3 flex items-center gap-3 font-[family-name:var(--font-mono)] text-xs text-text-tertiary">
+              <time datetime={date.toISOString()}>{dateStr}</time>
+              {updated && <span>（更新于 {updatedStr}）</span>}
+            </div>
+            <h1 class="mb-4 text-2xl font-medium leading-snug sm:text-3xl">
+              {weekNumber ? `W${weekNumber}: ` : ''}{title}
+            </h1>
+            {tags.length > 0 && (
+              <div class="flex flex-wrap gap-1.5">
+                {tags.map((tag) => <TagBadge tag={tag} interactive />)}
+              </div>
+            )}
+          </header>
 
-    <!-- Content -->
-    <div class="prose prose-neutral">
-      <slot />
+          <!-- Mobile TOC (below xl) -->
+          {showToc && (
+            <div class="xl:hidden mb-8 rounded-lg border border-border-light bg-bg-subtle p-4">
+              <TOC headings={headings} />
+            </div>
+          )}
+
+          <div class="prose prose-neutral">
+            <slot />
+          </div>
+        </article>
+
     </div>
-  </article>
-</BaseLayout>
+
+    <!-- Sidebar TOC (xl and above), fixed to viewport -->
+    {showToc && (
+      <aside class="hidden xl:block fixed top-24 w-44" style="left: calc(50% + 26rem);">
+        <TOC headings={headings} />
+      </aside>
+    )}
+
+    <Footer />
+  </body>
+</html>
