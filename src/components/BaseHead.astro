@@ -51,3 +51,13 @@ const canonical = canonicalUrl ?? Astro.url.href;
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<!-- Theme: apply dark class before paint to prevent FOUC -->
+<script is:inline>
+  (function() {
+    var theme = localStorage.getItem('theme');
+    if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+  })();
+</script>

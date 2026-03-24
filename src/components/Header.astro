@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../data/site';
+import ThemeToggle from './ThemeToggle';
 
 const pathname = Astro.url.pathname;
 ---
@@ -38,6 +39,9 @@ const pathname = Astro.url.pathname;
           </a>
         </li>
       ))}
+      <li>
+        <ThemeToggle client:load />
+      </li>
     </ul>
   </nav>
 </header>
