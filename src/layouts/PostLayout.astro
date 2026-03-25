@@ -34,7 +34,7 @@ const showToc = toc && type === 'article' && headings.filter(h => h.depth >= 2 &
   <body class="bg-bg text-text-primary">
     <Header />
 
-    <div class="relative mx-auto w-full max-w-3xl px-6 py-10">
+    <div class="relative mx-auto w-full max-w-4xl px-6 py-10">
         <!-- Main content -->
         <article>
           <a href="/posts" class="mb-6 inline-flex items-center gap-1 text-sm text-text-tertiary hover:text-accent transition-colors">
@@ -72,7 +72,7 @@ const showToc = toc && type === 'article' && headings.filter(h => h.depth >= 2 &
 
     <!-- Sidebar TOC (xl and above), fixed to viewport -->
     {showToc && (
-      <aside class="hidden xl:block fixed top-24 w-44" style="left: calc(50% + 26rem);">
+      <aside class="hidden xl:block fixed top-24 w-44" style="left: calc(50% + 30rem);">
         <TOC headings={headings} />
       </aside>
     )}
