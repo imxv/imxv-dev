@@ -1,16 +1,16 @@
-import { useCallback } from "react";
-import { SunMoonIcon } from "./ui/sun-moon";
+import { useCallback } from 'react';
+import { SunMoonIcon } from './ui/sun-moon';
 
 export default function ThemeToggle() {
   const toggle = useCallback(() => {
     const html = document.documentElement;
-    html.classList.add("theme-transition");
-    html.classList.toggle("dark");
+    html.classList.add('theme-transition');
+    html.classList.toggle('dark');
 
-    const isDark = html.classList.contains("dark");
-    localStorage.setItem("theme", isDark ? "dark" : "light");
+    const isDark = html.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
 
-    setTimeout(() => html.classList.remove("theme-transition"), 300);
+    setTimeout(() => html.classList.remove('theme-transition'), 300);
   }, []);
 
   return (

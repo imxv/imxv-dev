@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; source ~/.nvm/nvm.sh && nvm use 22 > /dev/null 2>&1 && pnpm biome check --write --unsafe \"$f\" 2>/dev/null || true; }",
+            "timeout": 30,
+            "statusMessage": "Formatting..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "source ~/.nvm/nvm.sh && nvm use 22 > /dev/null 2>&1 && pnpm build 2>/dev/null || echo '{\"stopReason\": \"Build failed. Please fix errors before finishing.\"}'",
+            "timeout": 60,
+            "statusMessage": "Verifying build..."
+          }
+        ]
+      }
+    ]
+  }
+}
